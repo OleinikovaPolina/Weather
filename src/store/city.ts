@@ -10,11 +10,13 @@ const getters = <GetterTree<State, any>>{}
 
 const mutations = <MutationTree<State>>{
     ADD_CITY: (state, data) => {
-        state.data.unshift(data)
+        if (data) {
+            state.data.unshift(data)
+        }
         localStorage.setItem('cities', JSON.stringify(state.data))
     },
     REMOVE_CITY: (state, id) => {
-        state.data = state.data.filter(city => city.id != id)
+        state.data = state.data.filter(city => city?.id != id)
         localStorage.setItem('cities', JSON.stringify(state.data))
     },
     REMOVE_ALL_CITY: (state) => {
@@ -30,10 +32,12 @@ const actions = <ActionTree<State, any>>{
     },
     ADD_CITY: (state, data) => {
         state.commit('city/ADD_CITY', data, {root: true})
-        state.commit('REMOVE_CITY', data.id, {root: true})
+        if (data) {
+            state.commit('REMOVE_CITY', data.id, {root: true})
+        }
     },
     REMOVE_CITY: (state, id) => {
-        state.commit('ADD_CITY', state.state.data.find(city => city.id == id), {root: true})
+        state.commit('ADD_CITY', state.state.data.find(city => city?.id == id), {root: true})
         state.commit('city/REMOVE_CITY', id, {root: true})
     }
 }

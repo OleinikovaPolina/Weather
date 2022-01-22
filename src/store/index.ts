@@ -43,7 +43,7 @@ const mutations = <MutationTree<State>>{
         localStorage.setItem('units', data)
     },
     REMOVE_CITY(state, id) {
-        state.cities = state.cities.filter(x => x.id != id)
+        state.cities = state.cities.filter(city => city?.id != id)
     },
     ADD_CITY(state, data) {
         state.cities.unshift(data)
@@ -71,9 +71,9 @@ const actions = <ActionTree<State, any>>{
         })
     },
     ADD_ACTIVE_CITY(state, id) {
-        const data = state.rootState.city.data.find((city: any) => city.id == id)
+        const data = state.rootState.city.data.find((city: any) => city?.id == id)
         if (data === undefined) {
-            state.commit('ADD_ACTIVE_CITY', state.state.cities.filter(x => x.id == id)[0], {root: true})
+            state.commit('ADD_ACTIVE_CITY', state.state.cities.filter(x => x?.id == id)[0], {root: true})
         } else {
             state.commit('ADD_ACTIVE_CITY', data, {root: true})
         }

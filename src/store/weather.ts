@@ -12,10 +12,12 @@ const getters = <GetterTree<State, any>>{}
 
 const mutations = <MutationTree<State>>{
     ADD_WEATHER(state, data) {
-        if (state.data.filter(weather => weather.id === data.id).length > 0) {
-            state.data = state.data.map(o => o.id === data.id ? data : o)
-        } else {
-            state.data.unshift(data)
+        if (data) {
+            if (state.data.filter(weather => weather.id === data.id).length > 0) {
+                state.data = state.data.map(o => o.id === data.id ? data : o)
+            } else {
+                state.data.unshift(data)
+            }
         }
     },
     REMOVE_ALL_WEATHER(state) {
@@ -56,7 +58,7 @@ const actions = <ActionTree<State, any>>{
     async ADD_FULL_WEATHER(state) {
         state.commit('weather/ADD_FULL_WEATHER', {}, {root: true})
         const city = state.rootState.activeCity
-        if (city) {
+        if (Object.keys(city).length > 0) {
             await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
                 params: {
                     lat: city.coord.lat,

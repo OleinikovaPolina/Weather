@@ -25,7 +25,7 @@
       <div class="d-flex align-stretch flex-wrap">
         <v-responsive max-width="260">
           <v-autocomplete
-              v-model="city"
+              v-model="cityId"
               :items="$store.state.cities.filter(x=>x.country==='RU')"
               item-text="name"
               item-value="id"
@@ -37,7 +37,7 @@
           ></v-autocomplete>
         </v-responsive>
         <div>
-          <v-btn @click="nameChanged" height="100%" color="primary">Add</v-btn>
+          <v-btn :disabled="cityId?false:true" @click="nameChanged" height="100%" color="primary">Add</v-btn>
         </div>
       </div>
     </v-col>
@@ -87,12 +87,12 @@ import NetworkError from "@/components/NetworkError.vue";
   }
 })
 export default class Home extends Vue {
-  private city: Object = {}
+  private cityId: Number = 0
 
   public async nameChanged() {
-    await this.$store.dispatch('weather/ADD_WEATHER', this.city)
-    await this.$store.dispatch('city/ADD_CITY', this.$store.state.cities.find((city: any) => city.id == this.city))
-    this.city = {}
+    await this.$store.dispatch('weather/ADD_WEATHER', this.cityId)
+    await this.$store.dispatch('city/ADD_CITY', this.$store.state.cities.find((city: any) => city?.id == this.cityId))
+    this.cityId = 0
   }
 }
 </script>
