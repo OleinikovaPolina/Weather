@@ -22,7 +22,7 @@
       >
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
-      <v-card-title>
+      <v-card-title class=" px-2">
         <v-list-item two-line style="width: 100%">
           <v-list-item-content>
             <v-list-item-title class="text-h5" style="white-space: initial;word-break: break-word">
@@ -40,7 +40,7 @@
         </v-list-item>
       </v-card-title>
       <v-card-text>
-        <div class="d-flex align-center px-4">
+        <div class="d-flex align-center px-2">
           <div class="text-h4 white--text">
             {{ parseInt(weather.current.temp) + $store.state.unitsData[$store.state.units].deg }}
           </div>

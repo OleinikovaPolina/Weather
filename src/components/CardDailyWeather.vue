@@ -1,6 +1,6 @@
 <template>
   <v-card
-      class="mx-auto ma-2"
+      class="mx-auto ma-2 pa-2"
       dark
       color="grey"
       :style="{

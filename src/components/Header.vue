@@ -99,7 +99,7 @@
           <v-card-text class="pt-4">
             <div>Change units</div>
             <div class="d-flex align-stretch flex-wrap">
-              <v-responsive max-width="260">
+              <v-responsive max-width="260" width="100%">
                 <v-autocomplete
                     v-model="units"
                     :items="['standard','metric','imperial']"
@@ -110,7 +110,7 @@
                 ></v-autocomplete>
               </v-responsive>
               <div>
-                <v-btn @click="changeUnits" height="100%" color="primary">Save</v-btn>
+                <v-btn @click="changeUnits" min-height="36px" height="100%" color="primary">Save</v-btn>
               </div>
             </div>
             <div v-if="$store.state.city.data.length!==0">

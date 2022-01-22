@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto ma-2 pt-6  fill-height">
+  <v-card class="mx-auto ma-2 pt-6 fill-height">
     <div class="px-4">
       <v-skeleton-loader
           type="heading"
@@ -10,10 +10,10 @@
       <v-skeleton-loader
           type="text"
           max-width="150"
-          class="mb-12"
+          class="mb-6"
       >
       </v-skeleton-loader>
-      <div class="mb-11 d-flex align-center">
+      <div class="mb-6 d-flex align-center">
         <v-skeleton-loader
             type="heading"
             width="30%"

@@ -1,9 +1,9 @@
 <template>
   <v-sheet
       :color="`grey lighten-4`"
-      class="py-9 mt-2"
+      class="pt-8 pb-6 mt-2"
   >
-    <div class="px-9">
+    <div class="px-7">
       <v-skeleton-loader
           type="heading"
           class="mb-2"
@@ -13,13 +13,13 @@
       <v-skeleton-loader
           type="text"
           max-width="150"
-          class="mb-8"
+          class="mb-10"
       >
       </v-skeleton-loader>
       <v-skeleton-loader
           type="heading"
-          class="mb-4"
-          width="700"
+          class="mb-8"
+          max-width="700"
       >
       </v-skeleton-loader>
       <v-chip-group
@@ -53,7 +53,7 @@
     </v-sheet>
     <v-divider></v-divider>
     <v-sheet
-        class="mx-auto my-4 px-6"
+        class="mx-auto mt-4 px-6"
         max-width="100%"
         style="background: none"
     >

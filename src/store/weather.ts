@@ -43,10 +43,8 @@ const actions = <ActionTree<State, any>>{
                     units: state.rootState['units']
                 }
             }).then(res => {
-                console.log(res)
                 state.commit('weather/ADD_WEATHER', res.data, {root: true})
             }).catch((err) => {
-                console.log(err)
                 if (!err.response) {
                     state.commit('weather/ADD_WEATHER', {id: id, cod: 0}, {root: true})
                 }
