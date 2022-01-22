@@ -66,7 +66,7 @@
       <v-icon x-large color="primary">
         mdi-weather-cloudy
       </v-icon>
-      <div>The cities you selected earlier will be displayed here</div>
+      <div>The cities you select will be displayed here</div>
     </v-col>
   </v-row>
 </template>
