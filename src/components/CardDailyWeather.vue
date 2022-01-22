@@ -24,12 +24,12 @@
     <div class="pt-2">
       <v-list-item two-line>
         <v-list-item-content>
-          <v-list-item-title class="text-h5">
+          <v-list-item-title class="text-h5" style="white-space: initial">
             {{
               `${$store.state.fullDaysWeek[time.getDay()]}`
             }}
           </v-list-item-title>
-          <v-list-item-subtitle>
+          <v-list-item-subtitle style="white-space: initial">
             {{ `${weather.weather[0].description}` }}
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -100,21 +100,23 @@
         <v-col class="pa-0">
           <v-list-item three-line>
             <v-list-item-content>
-              <v-list-item-title class="text-h6">
+              <v-list-item-title class="text-h6" style="white-space: initial">
                 Feels like {{ parseInt(weather.feels_like.day) + $store.state.unitsData[$store.state.units].deg }}
               </v-list-item-title>
-              <v-list-item-subtitle>
+              <v-list-item-subtitle style="white-space: initial">
                 {{
                   `Max ${parseInt(weather.temp.max)}&deg;C,
                    Min ${parseInt(weather.temp.max) + $store.state.unitsData[$store.state.units].deg}`
                 }}
               </v-list-item-subtitle>
-              <v-list-item-subtitle>
+              <v-list-item-subtitle style="white-space: initial" class="d-flex">
                 Atmospheric temperature
                 {{ parseInt(weather.dew_point) + $store.state.unitsData[$store.state.units].deg }}
                 <v-tooltip right color="primary" max-width="400">
                   <template v-slot:activator="{ on, attrs }">
-                    <span style="cursor: default" v-bind="attrs" v-on="on">🛈</span>
+                    <v-icon style="height: 1em;    padding-left: 0.3em" small color="grey lighten-1" v-bind="attrs"
+                            v-on="on">mdi-help-circle-outline
+                    </v-icon>
                   </template>
                   <span> Atmospheric temperature below which water droplets begin to condense and dew can form.</span>
                 </v-tooltip>

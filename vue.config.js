@@ -7,6 +7,7 @@ module.exports = {
     ],
     pwa: {
         name: 'Weather',
+        themeColor: '#0c519e',
         msTileColor: '#fff',
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: '#0c519e',

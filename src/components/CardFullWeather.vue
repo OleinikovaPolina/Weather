@@ -25,10 +25,10 @@
       <v-card-title>
         <v-list-item two-line style="width: 100%">
           <v-list-item-content>
-            <v-list-item-title class="text-h5" style="overflow-wrap: break-word;">
+            <v-list-item-title class="text-h5" style="white-space: initial;word-break: break-word">
               {{ city.name ? city.name : `Time Zone: ${weather.timezone}` }}
             </v-list-item-title>
-            <v-list-item-subtitle>
+            <v-list-item-subtitle style="white-space: initial">
               {{
                 `${$store.state.fullDaysWeek[time.getDay()]},
               ${time.getHours() > 9 ? time.getHours() : '0' + time.getHours()}
@@ -57,12 +57,14 @@
                 <v-list-item-title class="text-h6" style="white-space: initial">
                   Feels like {{ parseInt(weather.current.feels_like) + $store.state.unitsData[$store.state.units].deg }}
                 </v-list-item-title>
-                <v-list-item-subtitle style="white-space: initial">
+                <v-list-item-subtitle style="white-space: initial" class="d-flex">
                   Atmospheric temperature
                   {{ parseInt(weather.current.dew_point) + $store.state.unitsData[$store.state.units].deg }}
                   <v-tooltip right color="primary" max-width="400">
                     <template v-slot:activator="{ on, attrs }">
-                      <span style="cursor: default" v-bind="attrs" v-on="on">🛈</span>
+                      <v-icon style="height: 1em;    padding-left: 0.3em" small color="grey lighten-1" v-bind="attrs"
+                              v-on="on">mdi-help-circle-outline
+                      </v-icon>
                     </template>
                     <span> Atmospheric temperature below which water droplets begin to condense and dew can form.</span>
                   </v-tooltip>

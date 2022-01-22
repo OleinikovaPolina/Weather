@@ -24,13 +24,13 @@
     <div class="pt-2">
       <v-list-item two-line>
         <v-list-item-content>
-          <v-list-item-title class="text-h5">
+          <v-list-item-title class="text-h5" style="white-space: initial">
             {{
               `${$store.state.daysWeek[time.getDay()]},
               ${time.getHours() > 9 ? time.getHours() : '0' + time.getHours()}:00`
             }}
           </v-list-item-title>
-          <v-list-item-subtitle>
+          <v-list-item-subtitle style="white-space: initial">
             {{ `${weather.weather[0].description}` }}
           </v-list-item-subtitle>
         </v-list-item-content>

@@ -31,10 +31,10 @@
     <div class="pt-2">
       <v-list-item two-line>
         <v-list-item-content>
-          <v-list-item-title class="text-h5">
+          <v-list-item-title class="text-h5" style="white-space: initial">
             {{ weather.name }}
           </v-list-item-title>
-          <v-list-item-subtitle>
+          <v-list-item-subtitle style="white-space: initial">
             {{
               `${$store.state.daysWeek[time.getDay()]},
               ${time.getHours() > 9 ? time.getHours() : '0' + time.getHours()}
@@ -62,12 +62,12 @@
         <div>
           <v-list-item two-line>
             <v-list-item-content>
-              <v-list-item-title class="text-h6">
+              <v-list-item-title class="text-h6" style="white-space: initial">
                 {{
                   `Feels like ${parseInt(weather.main.feels_like)} ${$store.state.unitsData[$store.state.units].deg}`
                 }}
               </v-list-item-title>
-              <v-list-item-subtitle>
+              <v-list-item-subtitle style="white-space: initial">
                 {{
                   `Max ${parseInt(weather.main.temp_max)}${$store.state.unitsData[$store.state.units].deg},
                   Min ${parseInt(weather.main.temp_min)}${$store.state.unitsData[$store.state.units].deg}`
