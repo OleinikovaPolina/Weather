@@ -26,7 +26,7 @@
         <v-list-item-content>
           <v-list-item-title class="text-h5" style="white-space: initial">
             {{
-              `${$store.state.fullDaysWeek[time.getDay()]}`
+              `${fullDaysWeek[time.getDay()]}`
             }}
           </v-list-item-title>
           <v-list-item-subtitle style="white-space: initial">
@@ -48,14 +48,8 @@
             <v-icon left>
               mdi-weather-sunny
             </v-icon>
-            {{
-              ((time1, time2) =>
-                      `${time1.getHours() > 9 ? time1.getHours() : '0' + time1.getHours()}
-                  :${time1.getMinutes() > 9 ? time1.getMinutes() : '0' + time1.getMinutes()}/
-                  ${time2.getHours() > 9 ? time2.getHours() : '0' + time2.getHours()}
-                  :${time2.getMinutes() > 9 ? time2.getMinutes() : '0' + time2.getMinutes()}`
-              )(new Date(weather.sunrise * 1000), new Date(weather.sunset * 1000))
-            }}
+            {{ $moment(weather.sunrise * 1000).format("HH:mm") }} /
+            {{ $moment(weather.sunset * 1000).format("HH:mm") }}
           </v-chip>
         </template>
         <span>Sunrise / Sunset</span>
@@ -72,14 +66,8 @@
             <v-icon left>
               mdi-weather-night
             </v-icon>
-            {{
-              ((time1, time2) =>
-                      `${time1.getHours() > 9 ? time1.getHours() : '0' + time1.getHours()}
-                  :${time1.getMinutes() > 9 ? time1.getMinutes() : '0' + time1.getMinutes()}/
-                  ${time2.getHours() > 9 ? time2.getHours() : '0' + time2.getHours()}
-                  :${time2.getMinutes() > 9 ? time2.getMinutes() : '0' + time2.getMinutes()}`
-              )(new Date(weather.moonrise * 1000), new Date(weather.moonset * 1000))
-            }}
+            {{ $moment(weather.moonrise * 1000).format("HH:mm") }} /
+            {{ $moment(weather.moonset * 1000).format("HH:mm") }}
           </v-chip>
         </template>
         <span>Moonrise / Moonset</span>
@@ -88,12 +76,12 @@
     <v-card-text>
       <div class="d-flex align-center">
         <div class=" white--text" :class="$vuetify.breakpoint.xs?'text-h5':'text-h4'">
-          {{ parseInt(weather.temp.day) + $store.state.unitsData[$store.state.units].deg }}
+          {{ parseInt(weather.temp.day) + units.deg }}
         </div>
         <v-avatar class="pl-4" :width="$vuetify.breakpoint.xs?75:100">
           <v-img
               :style="{mixBlendMode:'screen',filter: 'brightness(200%)'}"
-              :src="`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
+              :src="`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
               :alt="weather.weather[0].description+'image'"
           ></v-img>
         </v-avatar>
@@ -101,17 +89,17 @@
           <v-list-item three-line>
             <v-list-item-content>
               <v-list-item-title class="text-h6" style="white-space: initial">
-                Feels like {{ parseInt(weather.feels_like.day) + $store.state.unitsData[$store.state.units].deg }}
+                Feels like {{ parseInt(weather.feels_like.day) + units.deg }}
               </v-list-item-title>
               <v-list-item-subtitle style="white-space: initial">
                 {{
-                  `Max ${parseInt(weather.temp.max)}&deg;C,
-                   Min ${parseInt(weather.temp.max) + $store.state.unitsData[$store.state.units].deg}`
+                  `Max ${parseInt(weather.temp.max) + units.deg},
+                   Min ${parseInt(weather.temp.min) + units.deg}`
                 }}
               </v-list-item-subtitle>
               <v-list-item-subtitle style="white-space: initial" class="d-flex">
                 Atmospheric temperature
-                {{ parseInt(weather.dew_point) + $store.state.unitsData[$store.state.units].deg }}
+                {{ parseInt(weather.dew_point) + units.deg }}
                 <v-tooltip right color="primary" max-width="400">
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon style="height: 1em;    padding-left: 0.3em" small color="grey lighten-1" v-bind="attrs"
@@ -158,9 +146,9 @@
               <v-icon left>
                 mdi-weather-windy
               </v-icon>
-              {{ weather.wind_speed + $store.state.unitsData[$store.state.units].speed }},
-              {{ weather.wind_deg + $store.state.unitsData[$store.state.units].deg }}
-              {{ weather.wind_gust ? ', ' + weather.wind_gust + $store.state.unitsData[$store.state.units].speed : '' }}
+              {{ weather.wind_speed + units.speed }},
+              {{ weather.wind_deg + units.deg }}
+              {{ weather.wind_gust ? ', ' + weather.wind_gust + units.speed : '' }}
             </v-chip>
           </template>
           <span>Wind</span>
@@ -259,8 +247,16 @@
 <script lang="ts">
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {WeatherDaily} from "@/store/types";
+import {mapGetters} from "vuex";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters([
+      'fullDaysWeek',
+      'units'
+    ])
+  }
+})
 export default class CardDailyWeather extends Vue {
   @Prop() readonly weather!: WeatherDaily
   @Prop() readonly delete_weather!: () => void

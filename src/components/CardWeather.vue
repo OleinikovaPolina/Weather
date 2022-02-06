@@ -35,12 +35,7 @@
             {{ weather.name }}
           </v-list-item-title>
           <v-list-item-subtitle style="white-space: initial">
-            {{
-              `${$store.state.daysWeek[time.getDay()]},
-              ${time.getHours() > 9 ? time.getHours() : '0' + time.getHours()}
-              :${time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes()},
-              ${weather.weather[0].description}`
-            }}
+            {{ `${daysWeek[time.getDay()]}, ${$moment(time).format("HH:mm")}, ${weather.weather[0].description}` }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -49,12 +44,12 @@
     <v-card-text>
       <div class="d-flex align-center">
         <div class="text-h4 white--text">
-          {{ `${parseInt(weather.main.temp)}${$store.state.unitsData[$store.state.units].deg}` }}
+          {{ `${parseInt(weather.main.temp) + units.deg}` }}
         </div>
         <div>
           <v-img
               :style="{mixBlendMode:'screen',filter: 'brightness(200%)'}"
-              :src="`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
+              :src="`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
               :alt="weather.weather[0].description+'image'"
               width="75"
           ></v-img>
@@ -64,13 +59,13 @@
             <v-list-item-content>
               <v-list-item-title class="text-h6" style="white-space: initial">
                 {{
-                  `Feels like ${parseInt(weather.main.feels_like)} ${$store.state.unitsData[$store.state.units].deg}`
+                  `Feels like ${parseInt(weather.main.feels_like) + units.deg}`
                 }}
               </v-list-item-title>
               <v-list-item-subtitle style="white-space: initial">
                 {{
-                  `Max ${parseInt(weather.main.temp_max)}${$store.state.unitsData[$store.state.units].deg},
-                  Min ${parseInt(weather.main.temp_min)}${$store.state.unitsData[$store.state.units].deg}`
+                  `Max ${parseInt(weather.main.temp_max) + units.deg},
+                  Min ${parseInt(weather.main.temp_min) + units.deg}`
                 }}
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -110,7 +105,7 @@
               <v-icon left>
                 mdi-weather-windy
               </v-icon>
-              {{ `${weather.wind.speed}${$store.state.unitsData[$store.state.units].speed}` }}
+              {{ `${weather.wind.speed + units.speed}` }}
             </v-chip>
           </template>
           <span>Wind</span>
@@ -201,8 +196,16 @@
 <script lang="ts">
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Weather} from "@/store/types";
+import {mapGetters} from "vuex";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters([
+      'units',
+      'daysWeek'
+    ])
+  }
+})
 export default class Home extends Vue {
   @Prop() readonly weather!: Weather
   private time: Date = new Date(this.weather.dt * 1000)

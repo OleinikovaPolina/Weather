@@ -11,6 +11,7 @@ export interface City {
     IR: string,
     coord: Coord
 }
+
 //Weather
 interface WeatherInfo {
     id: number,
@@ -70,6 +71,7 @@ export interface Weather {
     clouds: WeatherClouds,
     sys: WeatherSys
 }
+
 //FullWeather
 interface WeatherCurrent {
     dt: number,
@@ -87,6 +89,8 @@ interface WeatherCurrent {
     wind_deg: number,
     wind_gust?: number,
     weather: Array<WeatherInfo>
+    snow?: WeatherSnowRain,
+    rain?: WeatherSnowRain,
 }
 
 export interface WeatherHourly {
@@ -105,6 +109,7 @@ export interface WeatherHourly {
     pop: number,
     weather: Array<WeatherInfo>
 }
+
 //FullWeather.WeatherDaily
 interface WeatherDailyTemp {
     day: number,
@@ -151,6 +156,9 @@ export interface FullWeather {
     timezone: string,
     timezone_offset: number,
     current: WeatherCurrent,
-    hourly: WeatherHourly,
-    daily: WeatherDaily
+    hourly: Array<WeatherHourly>,
+    daily: Array<WeatherDaily>,
+    cod?: number
 }
+
+export type typeUnits = 'standard' | 'metric' | 'imperial'

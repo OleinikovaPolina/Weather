@@ -1,15 +1,15 @@
 <template>
   <div>
-    <template v-if="$store.state.weather.full_weather.cod === 404">
+    <template v-if="fullWeather.cod === 404">
       <NotFound></NotFound>
     </template>
-    <template v-else-if="$store.state.weather.full_weather.cod === 0">
+    <template v-else-if="fullWeather.cod === 0">
       <v-card class="pa-4">
         <NetworkError @callback="()=>{$store.dispatch('weather/ADD_FULL_WEATHER')}"></NetworkError>
       </v-card>
     </template>
-    <template v-else-if="load && Object.keys($store.state.weather.full_weather).length !== 0">
-      <CardFullWeather :weather="$store.state.weather.full_weather"
+    <template v-else-if="load && Object.keys(fullWeather).length !== 0">
+      <CardFullWeather :weather="fullWeather"
                        :city="$store.state.activeCity"
                        :path="'ADD_FULL_WEATHER'"></CardFullWeather>
     </template>
@@ -25,12 +25,22 @@ import CardFullWeather from "@/components/CardFullWeather.vue";
 import CardFullWeatherSkeletonLoader from "@/components/CardFullWeatherSkeletonLoader.vue";
 import NotFound from "@/views/NotFound.vue";
 import NetworkError from "@/components/NetworkError.vue";
+import {mapGetters} from "vuex";
+import {FullWeather} from "@/store/types";
 
 @Component({
-  components: {NetworkError, NotFound, CardFullWeatherSkeletonLoader, CardFullWeather}
+  components: {NetworkError, NotFound, CardFullWeatherSkeletonLoader, CardFullWeather},
+  computed: {
+    ...mapGetters([
+      'activeCity',
+    ]),
+    ...mapGetters('weather', {fullWeather: 'fullWeather'}),
+    ...mapGetters('city', {city: 'data'})
+  }
 })
 export default class Weather extends Vue {
   private load: Boolean = false
+  private fullWeather!: FullWeather
 
   async mounted() {
     await this.$store.dispatch('ADD_ACTIVE_CITY', this.$route.params.id)

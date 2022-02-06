@@ -2,13 +2,27 @@ import axios from "axios";
 import {GetterTree, MutationTree, ActionTree} from "vuex"
 import {Weather, FullWeather} from './types'
 
+const instance = axios.create({
+    baseURL: 'https://api.openweathermap.org/data/2.5/'
+})
+
 class State {
     data: Array<Weather> = []
-    full_weather: FullWeather = <FullWeather>{}
-    local_weather: FullWeather = <FullWeather>{}
+    fullWeather: FullWeather = <FullWeather>{}
+    localWeather: FullWeather = <FullWeather>{}
 }
 
-const getters = <GetterTree<State, any>>{}
+const getters = <GetterTree<State, any>>{
+    data(state) {
+        return state.data
+    },
+    fullWeather(state) {
+        return state.fullWeather
+    },
+    localWeather(state) {
+        return state.localWeather
+    }
+}
 
 const mutations = <MutationTree<State>>{
     ADD_WEATHER(state, data) {
@@ -27,77 +41,77 @@ const mutations = <MutationTree<State>>{
         state.data = state.data.filter(weather => weather.id !== id)
     },
     ADD_FULL_WEATHER(state, data) {
-        state.full_weather = data
+        state.fullWeather = data
     },
     ADD_LOCAL_WEATHER(state, data) {
-        state.local_weather = data
+        state.localWeather = data
     },
 };
 
 const actions = <ActionTree<State, any>>{
-    async ADD_WEATHER(state, id) {
-        state.commit('weather/ADD_WEATHER', {id: id}, {root: true})
+    async ADD_WEATHER({commit,rootState}, id) {
+        commit('weather/ADD_WEATHER', {id: id}, {root: true})
         if (id) {
-            await axios.get('https://api.openweathermap.org/data/2.5/weather', {
+            await instance.get('/weather', {
                 params: {
                     id: id,
                     appid: '7bec99c40964201451827401996c14fc',
-                    units: state.rootState['units']
+                    units: rootState.unit
                 }
             }).then(res => {
-                state.commit('weather/ADD_WEATHER', res.data, {root: true})
+                commit('weather/ADD_WEATHER', res.data, {root: true})
             }).catch((err) => {
                 if (!err.response) {
-                    state.commit('weather/ADD_WEATHER', {id: id, cod: 0}, {root: true})
+                    commit('weather/ADD_WEATHER', {id: id, cod: 0}, {root: true})
                 }
             })
         } else {
-            state.commit('weather/ADD_WEATHER', {cod: 404}, {root: true})
+            commit('weather/ADD_WEATHER', {cod: 404}, {root: true})
         }
     },
-    async ADD_FULL_WEATHER(state) {
-        state.commit('weather/ADD_FULL_WEATHER', {}, {root: true})
-        const city = state.rootState.activeCity
+    async ADD_FULL_WEATHER({commit,rootState}) {
+        commit('weather/ADD_FULL_WEATHER', {}, {root: true})
+        const city = rootState.activeCity
         if (Object.keys(city).length > 0) {
-            await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
+            await instance.get('/onecall', {
                 params: {
                     lat: city.coord.lat,
                     lon: city.coord.lon,
                     exclude: 'minutely',
                     appid: '7bec99c40964201451827401996c14fc',
-                    units: state.rootState.units
+                    units: rootState.unit
                 }
             }).then((res) => {
-                state.commit('weather/ADD_FULL_WEATHER', res.data, {root: true})
+                commit('weather/ADD_FULL_WEATHER', res.data, {root: true})
             }).catch((err) => {
                 if (!err.response) {
-                    state.commit('weather/ADD_FULL_WEATHER', {cod: 0}, {root: true})
+                    commit('weather/ADD_FULL_WEATHER', {cod: 0}, {root: true})
                 }
             })
         } else {
-            state.commit('weather/ADD_FULL_WEATHER', {cod: 404}, {root: true})
+            commit('weather/ADD_FULL_WEATHER', {cod: 404}, {root: true})
         }
     },
-    async ADD_LOCAL_WEATHER(state) {
-        state.commit('weather/ADD_LOCAL_WEATHER', {}, {root: true})
-        if (state.rootState.location.coords) {
-            await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
+    async ADD_LOCAL_WEATHER({commit, rootState}) {
+        commit('weather/ADD_LOCAL_WEATHER', {}, {root: true})
+        if (rootState.location.coords) {
+            await instance.get('/onecall', {
                 params: {
-                    lat: state.rootState.location.coords.latitude,
-                    lon: state.rootState.location.coords.longitude,
+                    lat: rootState.location.coords.latitude,
+                    lon: rootState.location.coords.longitude,
                     exclude: 'minutely',
                     appid: '7bec99c40964201451827401996c14fc',
-                    units: state.rootState.units
+                    units: rootState.unit
                 }
             }).then((res) => {
-                state.commit('weather/ADD_LOCAL_WEATHER', res.data, {root: true});
+                commit('weather/ADD_LOCAL_WEATHER', res.data, {root: true});
             }).catch((err) => {
                 if (!err.response) {
-                    state.commit('weather/ADD_LOCAL_WEATHER', {cod: 0}, {root: true})
+                    commit('weather/ADD_LOCAL_WEATHER', {cod: 0}, {root: true})
                 }
             })
         } else {
-            state.commit('weather/ADD_LOCAL_WEATHER', {cod: 404}, {root: true})
+            commit('weather/ADD_LOCAL_WEATHER', {cod: 404}, {root: true})
         }
     },
 }

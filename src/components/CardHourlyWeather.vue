@@ -25,10 +25,8 @@
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title class="text-h5" style="white-space: initial">
-            {{
-              `${$store.state.daysWeek[time.getDay()]},
-              ${time.getHours() > 9 ? time.getHours() : '0' + time.getHours()}:00`
-            }}
+            {{ daysWeek[time.getDay()] }},
+            {{ $moment(time).format("HH:mm")}}
           </v-list-item-title>
           <v-list-item-subtitle style="white-space: initial">
             {{ `${weather.weather[0].description}` }}
@@ -40,12 +38,12 @@
     <v-card-text>
       <div class="d-flex align-center">
         <div class="text-h4 white--text">
-          {{ `${parseInt(weather.temp) + $store.state.unitsData[$store.state.units].deg}` }}
+          {{ `${parseInt(weather.temp) + units.deg}` }}
         </div>
         <v-avatar class="pl-4" :width="$vuetify.breakpoint.xs?50:100">
           <v-img
               :style="{mixBlendMode:'screen',filter: 'brightness(200%)'}"
-              :src="`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
+              :src="`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
               :alt="weather.weather[0].description+'image'"
           ></v-img>
         </v-avatar>
@@ -53,11 +51,11 @@
           <v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title class="text-h6" style="white-space: initial">
-                {{ `Feels like ${parseInt(weather.feels_like) + $store.state.unitsData[$store.state.units].deg}` }}
+                {{ `Feels like ${parseInt(weather.feels_like) + units.deg}` }}
               </v-list-item-title>
               <v-list-item-subtitle style="white-space: initial">
                 Atmospheric temperature
-                {{ parseInt(weather.dew_point) + $store.state.unitsData[$store.state.units].deg }}
+                {{ parseInt(weather.dew_point) + units.deg }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -96,11 +94,9 @@
               <v-icon left>
                 mdi-weather-windy
               </v-icon>
-              {{
-                `${weather.wind_speed + $store.state.unitsData[$store.state.units].speed},
-${weather.wind_deg + $store.state.unitsData[$store.state.units].deg},
-${weather.wind_gust + $store.state.unitsData[$store.state.units].speed}`
-              }}
+              {{ weather.wind_speed + units.speed }},
+              {{ weather.wind_deg + units.deg }},
+              {{ weather.wind_gust + units.speed }}
             </v-chip>
           </template>
           <span>Wind</span>
@@ -216,8 +212,16 @@ ${weather.wind_gust + $store.state.unitsData[$store.state.units].speed}`
 <script lang="ts">
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {WeatherHourly} from "@/store/types";
+import {mapGetters} from "vuex";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters([
+      'units',
+      'daysWeek'
+    ])
+  }
+})
 export default class CardHourlyWeather extends Vue {
   @Prop() readonly weather!: WeatherHourly
   @Prop() readonly delete_weather!: () => void

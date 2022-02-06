@@ -30,10 +30,9 @@
             </v-list-item-title>
             <v-list-item-subtitle style="white-space: initial">
               {{
-                `${$store.state.fullDaysWeek[time.getDay()]},
-              ${time.getHours() > 9 ? time.getHours() : '0' + time.getHours()}
-              :${time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes()},
-              ${weather.current.weather[0].description}`
+                `${fullDaysWeek[time.getDay()]},
+                ${$moment(time).format("HH:mm")},
+                ${weather.current.weather[0].description}`
               }}
             </v-list-item-subtitle>
           </v-list-item-content>
@@ -42,12 +41,12 @@
       <v-card-text>
         <div class="d-flex align-center px-2">
           <div class="text-h4 white--text">
-            {{ parseInt(weather.current.temp) + $store.state.unitsData[$store.state.units].deg }}
+            {{ parseInt(weather.current.temp) + units.deg }}
           </div>
           <v-avatar class="pl-4" :width="$vuetify.breakpoint.xs?50:100">
             <v-img
                 :style="{mixBlendMode:'screen',filter: 'brightness(200%)'}"
-                :src="`http://openweathermap.org/img/wn/${weather.current.weather[0].icon}@2x.png`"
+                :src="`https://openweathermap.org/img/wn/${weather.current.weather[0].icon}@2x.png`"
                 :alt="weather.current.weather[0].description+'image'"
             ></v-img>
           </v-avatar>
@@ -55,11 +54,11 @@
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-title class="text-h6" style="white-space: initial">
-                  Feels like {{ parseInt(weather.current.feels_like) + $store.state.unitsData[$store.state.units].deg }}
+                  Feels like {{ parseInt(weather.current.feels_like) + units.deg }}
                 </v-list-item-title>
                 <v-list-item-subtitle style="white-space: initial" class="d-flex">
                   Atmospheric temperature
-                  {{ parseInt(weather.current.dew_point) + $store.state.unitsData[$store.state.units].deg }}
+                  {{ parseInt(weather.current.dew_point) + units.deg }}
                   <v-tooltip right color="primary" max-width="400">
                     <template v-slot:activator="{ on, attrs }">
                       <v-icon style="height: 1em;    padding-left: 0.3em" small color="grey lighten-1" v-bind="attrs"
@@ -87,14 +86,8 @@
                 <v-icon left>
                   mdi-weather-sunny
                 </v-icon>
-                {{
-                  ((time1, time2) =>
-                          `${time1.getHours() > 9 ? time1.getHours() : '0' + time1.getHours()}
-                  :${time1.getMinutes() > 9 ? time1.getMinutes() : '0' + time1.getMinutes()} /
-                  ${time2.getHours() > 9 ? time2.getHours() : '0' + time2.getHours()}
-                  :${time2.getMinutes() > 9 ? time2.getMinutes() : '0' + time2.getMinutes()}`
-                  )(new Date(weather.current.sunrise * 1000), new Date(weather.current.sunset * 1000))
-                }}
+                {{ $moment(weather.current.sunrise * 1000).format("HH:mm") }} /
+                {{ $moment(weather.current.sunset * 1000).format("HH:mm") }}
               </v-chip>
             </template>
             <span>Sunrise / Sunset</span>
@@ -128,13 +121,9 @@
                 <v-icon left>
                   mdi-weather-windy
                 </v-icon>
-                {{ weather.current.wind_speed + $store.state.unitsData[$store.state.units].speed }},
-                {{ weather.current.wind_deg + $store.state.unitsData[$store.state.units].deg }}
-                {{
-                  weather.current.wind_gust ?
-                      ',' + weather.current.wind_gust + $store.state.unitsData[$store.state.units].speed
-                      : ''
-                }}
+                {{ weather.current.wind_speed + units.speed }},
+                {{ weather.current.wind_deg + units.deg }}
+                {{ weather.current.wind_gust ? ',' + weather.current.wind_gust + units.speed : '' }}
               </v-chip>
             </template>
             <span>Wind</span>
@@ -270,22 +259,17 @@
                     style="background: none"
                 >
                   <div>
-                    {{
-                      ((time) =>
-                              `${time.getHours() === 0 && i !== 0 ? $store.state.daysWeek[time.getDay()] + ',' : ''}
-                              ${time.getHours() > 9 ? time.getHours() : '0' + time.getHours()}:00`
-                      )(new Date(hourly.dt * 1000))
-                    }}
+                    {{ $moment(hourly.dt * 1000).format("HH:mm") }}
                   </div>
                   <div>
                     <v-img
                         :style="{mixBlendMode:'screen',filter: 'brightness(200%)'}"
-                        :src="`http://openweathermap.org/img/wn/${hourly.weather[0].icon}@2x.png`"
+                        :src="`https://openweathermap.org/img/wn/${hourly.weather[0].icon}@2x.png`"
                         :alt="hourly.weather[0].description+'image'"
                         width="50"
                     ></v-img>
                   </div>
-                  <div> {{ parseInt(hourly.temp) + $store.state.unitsData[$store.state.units].deg }}</div>
+                  <div> {{ parseInt(hourly.temp) + units.deg }}</div>
                 </v-card>
               </div>
             </v-slide-item>
@@ -313,18 +297,18 @@
                   outlined
                   style="background: none"
               >
-                <div>{{ `${$store.state.fullDaysWeek[new Date(daily.dt * 1000).getDay()]}` }}</div>
+                <div>{{ `${fullDaysWeek[new Date(daily.dt * 1000).getDay()]}` }}</div>
                 <div>
                   <v-img
                       :style="{mixBlendMode:'screen',filter: 'brightness(200%)'}"
-                      :src="`http://openweathermap.org/img/wn/${daily.weather[0].icon}@2x.png`"
+                      :src="`https://openweathermap.org/img/wn/${daily.weather[0].icon}@2x.png`"
                       :alt="daily.weather[0].description+'image'"
                       width="50"
                       class="mx-auto"
                   ></v-img>
                 </div>
                 <div> {{ daily.weather[0].main }}</div>
-                <div> {{ parseInt(daily.temp.day) + $store.state.unitsData[$store.state.units].deg }}</div>
+                <div> {{ parseInt(daily.temp.day) + units.deg }}</div>
               </v-card>
             </v-slide-item>
           </v-slide-group>
@@ -332,13 +316,13 @@
       </v-card-text>
     </v-card>
     <CardHourlyWeather :delete_weather="delete_weather"
-                       v-if="typeWeather===0"
-                       :weather="typeWeatherData">
+                       v-if="typeWeatherData.type===0"
+                       :weather="typeWeatherData.data">
 
     </CardHourlyWeather>
     <CardDailyWeather :delete_weather="delete_weather"
-                      v-if="typeWeather===1"
-                      :weather="typeWeatherData">
+                      v-if="typeWeatherData.type===1"
+                      :weather="typeWeatherData.data">
 
     </CardDailyWeather>
   </div>
@@ -347,32 +331,37 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import CardDailyWeather from "@/components/CardDailyWeather.vue"
 import CardHourlyWeather from "@/components/CardHourlyWeather.vue"
-import {City, FullWeather} from "@/store/types"
+import {City, FullWeather, WeatherDaily, WeatherHourly} from "@/store/types"
+import {mapGetters} from "vuex"
 
 interface typeWeatherData {
   type: number,
-  data: Object
+  data: WeatherDaily | WeatherHourly | {}
 }
 
 @Component({
-  components: {CardHourlyWeather, CardDailyWeather}
+  components: {CardHourlyWeather, CardDailyWeather},
+  computed: {
+    ...mapGetters([
+      'fullDaysWeek',
+      'units',
+      'daysWeek'
+    ])
+  }
 })
 export default class CardFullWeather extends Vue {
   @Prop() readonly weather!: FullWeather
   @Prop() readonly city!: City
   @Prop() readonly path!: City
   private time: Date = new Date()
-  private typeWeather: Number = -1
-  private typeWeatherData: Object = {}
+  private typeWeatherData: typeWeatherData = {type: -1, data: {}}
 
   public change(obj: typeWeatherData): void {
-    this.typeWeather = obj.type
-    this.typeWeatherData = obj.data
+    this.typeWeatherData = obj
   }
 
   public delete_weather(): void {
-    this.typeWeather = -1
-    this.typeWeatherData = {}
+    this.typeWeatherData = {type: -1, data: {}}
   }
 
   public refresh_weather(): void {

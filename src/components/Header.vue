@@ -50,12 +50,12 @@
           </v-card-title>
 
           <v-card-text class="py-4">
-            <div>{{ this.$store.state.location.id ? 'Change local city' : 'Select local city' }}</div>
+            <div>{{ location.id ? 'Change local city' : 'Select local city' }}</div>
             <div class="d-flex align-stretch flex-wrap">
               <v-responsive max-width="260">
                 <v-autocomplete
                     v-model="cityId"
-                    :items="$store.state.citiesAll.filter(x=>x.country==='RU')"
+                    :items="filterCitiesAll.filter(x=>x.country==='RU')"
                     item-text="name"
                     item-value="id"
                     flat
@@ -67,7 +67,7 @@
               </v-responsive>
               <div>
                 <v-btn @click="saveLocalCity" height="100%" color="primary">Save</v-btn>
-                <v-btn v-if="$store.state.location.id" @click="delLocalCity" height="100%" color="error">Delete
+                <v-btn v-if="location.id" @click="delLocalCity" height="100%" color="error">Delete
                 </v-btn>
               </div>
             </div>
@@ -101,7 +101,7 @@
             <div class="d-flex align-stretch flex-wrap">
               <v-responsive max-width="260" width="100%">
                 <v-autocomplete
-                    v-model="units"
+                    v-model="unit"
                     :items="['standard','metric','imperial']"
                     flat
                     hide-no-data
@@ -110,10 +110,10 @@
                 ></v-autocomplete>
               </v-responsive>
               <div>
-                <v-btn @click="changeUnits" min-height="36px" height="100%" color="primary">Save</v-btn>
+                <v-btn @click="changeUnit" min-height="36px" height="100%" color="primary">Save</v-btn>
               </div>
             </div>
-            <div v-if="$store.state.city.data.length!==0">
+            <div v-if="city.length!==0">
               <div class="mt-4">Delete all favorites</div>
               <v-btn
                   color="primary"
@@ -145,15 +145,27 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
+import {mapGetters} from "vuex";
+import {City} from "@/store/types";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters([
+      'location',
+      'filterCitiesAll'
+    ]),
+    ...mapGetters('city', {city: 'data'})
+  }
+})
 export default class Home extends Vue {
-  private cityId: Number = this.$store.state.location.id || 0
-  private units: String = this.$store.state.units
+  @Prop() openSnackbar!: () => void
+  private cityId: Number = this.$store.getters.location.id || 0
+  private unit: String = localStorage.getItem('unit') || 'metric'
   private dialog1: Boolean = false
   private dialog2: Boolean = false
   private showMenu: Boolean = false
-  @Prop() openSnackbar!: () => void
+  private city!: Array<City>
+  private filterCitiesAll!: Array<City>
 
   public async delLocalCity() {
     this.cityId = 0
@@ -167,19 +179,19 @@ export default class Home extends Vue {
     this.$emit('openSnackbar', {color: 'green', text: 'Removed successfully'})
   }
 
-  public changeUnits() {
-    this.$store.commit('ADD_UNITS', this.units)
+  public changeUnit() {
+    this.$store.commit('ADD_UNIT', this.unit)
     this.dialog2 = false
     this.$emit('openSnackbar', {color: 'green', text: 'Changes saved'})
     this.$store.dispatch('weather/ADD_LOCAL_WEATHER')
     this.$store.dispatch('weather/ADD_FULL_WEATHER')
-    for (var i = this.$store.state.city.data.length - 1; i >= 0; i--) {
-      this.$store.dispatch('weather/ADD_WEATHER', this.$store.state.city.data[i].id)
+    for (let i = this.city.length - 1; i >= 0; i--) {
+      this.$store.dispatch('weather/ADD_WEATHER', this.city[i].id)
     }
   }
 
   public async saveLocalCity() {
-    const city = this.$store.state.citiesAll.filter((city: any) => this.cityId === city.id)
+    const city = this.filterCitiesAll.filter((city: any) => this.cityId === city.id)
     if (city.length > 0) {
       let data = {
         coords: {

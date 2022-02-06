@@ -31,13 +31,25 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
 import Header from "@/components/Header.vue"
+import {mapGetters} from "vuex"
+import {City, Weather} from "@/store/types";
 
 @Component({
-  components: {Header}
+  components: {Header},
+  computed: {
+    ...mapGetters([
+      'location',
+    ]),
+    ...mapGetters('weather', {weather: 'data'}),
+    ...mapGetters('city', {city: 'data'})
+  }
 })
 export default class App extends Vue {
   private snackbar: Boolean = true
   private snackbarData: Object = {}
+  private location!: Location
+  private city!: Array<City>
+  private weather!: Array<Weather>
 
 
   public openSnackbar(data: Object = {color: 'primary', text: ''}) {
@@ -46,15 +58,18 @@ export default class App extends Vue {
   }
 
   async mounted() {
-    if (this.$store.state.city.data.length !== this.$store.state.weather.data.length) {
-      for (var i = this.$store.state.city.data.length - 1; i >= 0; i--) {
-        if (this.$store.state.city.data[i]) {
-          this.$store.dispatch('weather/ADD_WEATHER', this.$store.state.city.data[i].id)
-          this.$store.commit('REMOVE_CITY', this.$store.state.city.data[i].id)
+    this.$store.commit('ADD_UNIT', localStorage.getItem('unit'))
+
+    if (this.city.length !== this.weather.length) {
+      for (let i = this.city.length - 1; i >= 0; i--) {
+        if (this.city[i]) {
+          this.$store.dispatch('weather/ADD_WEATHER', this.city[i].id)
+          this.$store.commit('REMOVE_CITY', this.city[i].id)
         }
       }
     }
-    if (Object.keys(this.$store.state.location).length === 0) {
+
+    if (Object.keys(this.location).length === 0) {
       await this.$store.dispatch('ADD_LOCATION')
     } else {
       await this.$store.dispatch('weather/ADD_LOCAL_WEATHER')

@@ -6,7 +6,11 @@ class State {
     data: Array<City> = JSON.parse(localStorage.cities || '[]')
 }
 
-const getters = <GetterTree<State, any>>{}
+const getters = <GetterTree<State, any>>{
+    data(state) {
+        return state.data
+    }
+}
 
 const mutations = <MutationTree<State>>{
     ADD_CITY: (state, data) => {
@@ -26,19 +30,19 @@ const mutations = <MutationTree<State>>{
 };
 
 const actions = <ActionTree<State, any>>{
-    REMOVE_ALL_CITY: (state) => {
-        state.commit('city/REMOVE_ALL_CITY', null, {root: true})
-        state.commit('RETURN_ALL_CITY', null, {root: true})
+    REMOVE_ALL_CITY: ({commit}) => {
+        commit('city/REMOVE_ALL_CITY', null, {root: true})
+        commit('RETURN_ALL_CITY', null, {root: true})
     },
-    ADD_CITY: (state, data) => {
-        state.commit('city/ADD_CITY', data, {root: true})
+    ADD_CITY: ({commit}, data) => {
+        commit('city/ADD_CITY', data, {root: true})
         if (data) {
-            state.commit('REMOVE_CITY', data.id, {root: true})
+            commit('REMOVE_CITY', data.id, {root: true})
         }
     },
-    REMOVE_CITY: (state, id) => {
-        state.commit('ADD_CITY', state.state.data.find(city => city?.id == id), {root: true})
-        state.commit('city/REMOVE_CITY', id, {root: true})
+    REMOVE_CITY: ({commit, state}, id) => {
+        commit('ADD_CITY', state.data.find(city => city?.id == id), {root: true})
+        commit('city/REMOVE_CITY', id, {root: true})
     }
 }
 
