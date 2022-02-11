@@ -31,17 +31,17 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
 import Header from "@/components/Header.vue"
-import {mapGetters} from "vuex"
+import {mapState} from "vuex"
 import {City, Weather} from "@/store/types";
 
 @Component({
   components: {Header},
   computed: {
-    ...mapGetters([
+    ...mapState([
       'location',
     ]),
-    ...mapGetters('weather', {weather: 'data'}),
-    ...mapGetters('city', {city: 'data'})
+    ...mapState('weather', {weather: 'data'}),
+    ...mapState('city', {city: 'data'})
   }
 })
 export default class App extends Vue {

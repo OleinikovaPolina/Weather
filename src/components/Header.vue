@@ -145,21 +145,23 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from "vuex";
+import {mapGetters, mapState} from "vuex";
 import {City} from "@/store/types";
 
 @Component({
   computed: {
+    ...mapState([
+      'location'
+    ]),
     ...mapGetters([
-      'location',
       'filterCitiesAll'
     ]),
-    ...mapGetters('city', {city: 'data'})
+    ...mapState('city', {city: 'data'})
   }
 })
 export default class Home extends Vue {
   @Prop() openSnackbar!: () => void
-  private cityId: Number = this.$store.getters.location.id || 0
+  private cityId: Number = this.$store.state.location.id || 0
   private unit: String = localStorage.getItem('unit') || 'metric'
   private dialog1: Boolean = false
   private dialog2: Boolean = false

@@ -332,7 +332,7 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import CardDailyWeather from "@/components/CardDailyWeather.vue"
 import CardHourlyWeather from "@/components/CardHourlyWeather.vue"
 import {City, FullWeather, WeatherDaily, WeatherHourly} from "@/store/types"
-import {mapGetters} from "vuex"
+import {mapGetters, mapState} from "vuex"
 
 interface typeWeatherData {
   type: number,
@@ -342,10 +342,12 @@ interface typeWeatherData {
 @Component({
   components: {CardHourlyWeather, CardDailyWeather},
   computed: {
-    ...mapGetters([
+    ...mapState([
       'fullDaysWeek',
-      'units',
       'daysWeek'
+    ]),
+    ...mapGetters([
+      'units'
     ])
   }
 })

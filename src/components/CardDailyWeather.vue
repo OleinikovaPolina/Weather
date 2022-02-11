@@ -247,12 +247,14 @@
 <script lang="ts">
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {WeatherDaily} from "@/store/types";
-import {mapGetters} from "vuex";
+import {mapGetters, mapState} from "vuex";
 
 @Component({
   computed: {
+    ...mapState([
+      'fullDaysWeek'
+    ]),
     ...mapGetters([
-      'fullDaysWeek',
       'units'
     ])
   }

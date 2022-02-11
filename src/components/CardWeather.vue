@@ -196,13 +196,15 @@
 <script lang="ts">
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Weather} from "@/store/types";
-import {mapGetters} from "vuex";
+import {mapGetters, mapState} from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters([
-      'units',
+    ...mapState([
       'daysWeek'
+    ]),
+    ...mapGetters([
+      'units'
     ])
   }
 })

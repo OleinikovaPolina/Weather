@@ -79,7 +79,7 @@ import CardFullWeatherSkeletonLoader from "@/components/CardFullWeatherSkeletonL
 import CardWeatherSkeletonLoader from "@/components/CardWeatherSkeletonLoader.vue"
 import NotFound from "@/views/NotFound.vue";
 import NetworkError from "@/components/NetworkError.vue";
-import {mapGetters} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
 import {City, FullWeather, Weather} from "@/store/types";
 
 @Component({
@@ -88,12 +88,13 @@ import {City, FullWeather, Weather} from "@/store/types";
     NotFound, CardWeatherSkeletonLoader, CardWeather, CardFullWeather, CardFullWeatherSkeletonLoader
   },
   computed: {
-    ...mapGetters([
+    ...mapState([
       'gettingLocation',
-      'location',
+      'location']),
+    ...mapGetters([
       'filterCities'
     ]),
-    ...mapGetters('weather', {weathers: 'data',localWeather: 'localWeather'})
+    ...mapState('weather', {weathers: 'data', localWeather: 'localWeather'})
   }
 })
 export default class Home extends Vue {

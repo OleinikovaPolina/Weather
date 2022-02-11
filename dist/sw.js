@@ -1,4 +1,4 @@
-importScripts("https://oleinikovapolina.github.io/Weather/dist/precache-manifest.d79bf048dacfea157744a013f99b8d90.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("https://oleinikovapolina.github.io/Weather/dist/precache-manifest.c282f5499a754bf3e21bd46864508a9a.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 workbox.core.setCacheNameDetails({prefix: "weather"});
 

@@ -6,11 +6,7 @@ class State {
     data: Array<City> = JSON.parse(localStorage.cities || '[]')
 }
 
-const getters = <GetterTree<State, any>>{
-    data(state) {
-        return state.data
-    }
-}
+const getters = <GetterTree<State, any>>{}
 
 const mutations = <MutationTree<State>>{
     ADD_CITY: (state, data) => {

@@ -12,17 +12,7 @@ class State {
     localWeather: FullWeather = <FullWeather>{}
 }
 
-const getters = <GetterTree<State, any>>{
-    data(state) {
-        return state.data
-    },
-    fullWeather(state) {
-        return state.fullWeather
-    },
-    localWeather(state) {
-        return state.localWeather
-    }
-}
+const getters = <GetterTree<State, any>>{}
 
 const mutations = <MutationTree<State>>{
     ADD_WEATHER(state, data) {

@@ -25,17 +25,17 @@ import CardFullWeather from "@/components/CardFullWeather.vue";
 import CardFullWeatherSkeletonLoader from "@/components/CardFullWeatherSkeletonLoader.vue";
 import NotFound from "@/views/NotFound.vue";
 import NetworkError from "@/components/NetworkError.vue";
-import {mapGetters} from "vuex";
+import {mapState} from "vuex";
 import {FullWeather} from "@/store/types";
 
 @Component({
   components: {NetworkError, NotFound, CardFullWeatherSkeletonLoader, CardFullWeather},
   computed: {
-    ...mapGetters([
+    ...mapState([
       'activeCity',
     ]),
-    ...mapGetters('weather', {fullWeather: 'fullWeather'}),
-    ...mapGetters('city', {city: 'data'})
+    ...mapState('weather', {fullWeather: 'fullWeather'}),
+    ...mapState('city', {city: 'data'})
   }
 })
 export default class Weather extends Vue {

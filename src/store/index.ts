@@ -30,26 +30,8 @@ const getters = <GetterTree<State, any>>{
     filterCities(state) {
         return state.cities.filter(x => x.country === 'RU')
     },
-    gettingLocation(state) {
-        return state.gettingLocation
-    },
-    location(state) {
-        return state.location
-    },
-    activeCity(state) {
-        return state.activeCity
-    },
-    daysWeek(state) {
-        return state.daysWeek
-    },
-    fullDaysWeek(state) {
-        return state.fullDaysWeek
-    },
     units(state) {
         return state.unitsData[state.unit]
-    },
-    unit(state) {
-        return state.unit
     }
 }
 
@@ -77,6 +59,9 @@ const mutations = <MutationTree<State>>{
     },
     ADD_CITY(state, data) {
         state.cities.unshift(data)
+    },
+    RETURN_ALL_CITY(state) {
+        state.cities = require("@/assets/city.list.min.json")
     },
     ADD_ACTIVE_CITY(state, data) {
         state.activeCity = data
